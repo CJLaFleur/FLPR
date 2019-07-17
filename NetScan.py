@@ -21,10 +21,11 @@ class Network:
         self.EndIP = input("Enter an end IP: ")
         self.EndIP = int(self.EndIP)
         for i in self.IPnetwork:
-            while self.StartIP <= self.EndIP:
+            tempip = self.StartIP
+            while tempip <= self.EndIP:
                 temp = str(self.StartIP)
                 self.IPrange.put(str(i) + "." + temp)
-                self.StartIP += 1
+                tempip += 1
 
     # Get active hosts
     def gethosts(self, ipaddr):
