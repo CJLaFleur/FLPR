@@ -38,7 +38,7 @@
 
     if($OutCSV) {
         
-        $OutPath = "C:\Users\clafleur\Documents\NetComputers.csv"
+        $OutPath = "C:\Users\clafleur\Documents\NetworkScan.csv"
         Remove-Item -Path $OutPath -Force -EA SilentlyContinue
         $FileHandle = New-Object System.IO.StreamWriter -Arg $OutPath
         $FileHandle.AutoFlush = $True
@@ -69,7 +69,6 @@
         function Ping-Network {
 
             $NumIPs = $IPQueue.Count
-            #echo $NumIPs
 
             for([Int]$i = 0; $i -LT $NumIPs; $i++){
             
