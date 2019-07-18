@@ -23,7 +23,7 @@ class Network:
         for i in self.IPnetwork:
             tempip = self.StartIP
             while tempip <= self.EndIP:
-                temp = str(self.StartIP)
+                temp = str(tempip)
                 self.IPrange.put(str(i) + "." + temp)
                 tempip += 1
 
