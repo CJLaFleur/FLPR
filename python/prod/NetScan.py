@@ -15,7 +15,7 @@ class Network:
 
     # Get IP range
     def getiprange(self):
-        self.IPnetwork = input("Enter a(n) IP network(s) (x.x.x x.x.x): ").split(' ')
+        self.IPnetwork = input("Enter IP network(s) (x.x.x x.x.x): ").split(' ')
         self.StartIP = input("Enter a start IP: ")
         self.StartIP = int(self.StartIP)
         self.EndIP = input("Enter an end IP: ")
