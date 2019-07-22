@@ -43,7 +43,7 @@ class Network:
             temp = hostn + "\t " + ip
             self.Hostnames.put(temp)
 
-    # Multiprocessor (Limit of 50 threads set to prevent maxing the CPU)
+    # Multiprocessor (Limit of 100 threads set to prevent maxing the CPU)
     def fast(self):
         count = self.IPrange.qsize()
         threads = 0
@@ -52,7 +52,7 @@ class Network:
             proc = mp.Process(target=self.gethosts, args=(self.IPrange.get(),))
             proc.start()
             threads += 1
-            if threads == 50:
+            if threads == 100:
                 proc.join()
                 threads = 0
 
