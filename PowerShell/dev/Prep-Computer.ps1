@@ -1,20 +1,17 @@
 ﻿function Prep-Computer {
 
-    #$Creds = Get-Credential
+    # MAKE SURE TO FORMAT YOUR CREDENTIALS AS FOLLOWS: "firstlightpower.com\cjlafleur"
 
-    $Profiles = Get-CimInstance -ClassName Win32_UserProfile #| Where {(!$_.Special)}
-
-    foreach ($i in $Profiles) {
-
-        echo $i
-        echo "-----------------------------------------------------------"
-
-    }
+    $Creds = Get-Credential
     
-    #Remove-Computer -UnjoinDomainCredential $Creds -WorkgroupName Temp
+    $Domain = "FIRSTLIGHTPOWER.COM"
 
-    #Start-Sleep -Seconds 5
+    Get-CimInstance -ClassName Win32_UserProfile | Where {($_.LocalPath -NE "C:\Users\ITD" -AND !$_.Special -AND $_.Loaded -EQ $FALSE)} | Remove-CimInstance
+    
+    Remove-Computer -Credential $Creds -Force
 
-    #Add-Computer -Credential $Creds -DomainName firstlightpower.com
+    Add-Computer -Credential $Creds -DomainName $Domain
+    
+    Restart-Computer
 
 }
