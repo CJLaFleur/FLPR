@@ -1,5 +1,7 @@
 ﻿function Prep-Win7 {
 
+    # This script is written for PS V 2.0
+
     # MAKE SURE TO FORMAT YOUR CREDENTIALS AS FOLLOWS: "firstlightpower.com\cjlafleur"
 
     $Creds = Get-Credential
