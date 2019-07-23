@@ -1,4 +1,4 @@
-﻿function Scan-Network {
+﻿function Test-Network {
 
 [cmdletbinding()]
     Param(
@@ -37,6 +37,11 @@
     $IPQueue = New-Object System.Collections.Queue
     $HostList = New-Object System.Collections.Generic.List[System.Object]
 
+    $Pool = [RunspaceFactory]::CreateRunspacePool(1, 4)
+    $Pool.ApartmentState = "MTA"
+    $Pool.Open()
+    $Threads = @()
+
     if($OutCSV) {
         
         $OutPath = "C:\Users\clafleur\Documents\NetworkScan.csv"
@@ -65,21 +70,21 @@
             }
         }
 
-        function Ping-Node {
+        function Ping-Node($IPaddr) {
+        echo $IPaddr
+            #$NumIPs = $IPQueue.Count
 
-            $NumIPs = $IPQueue.Count
+            #for([Int]$i = 0; $i -LT $NumIPs; $i++){
 
-            for([Int]$i = 0; $i -LT $NumIPs; $i++){
-
-                $IP = $IPQueue.Dequeue()
-                $Test = $Ping.Send($IP, 1, .1)
+                #$IP = $IPQueue.Dequeue()
+                $Test = $Ping.Send($IPaddr, 1, .1)
 
                 if($Test.Status -EQ 'Success'){
         
-                    $ActiveIPs.Enqueue($IP)
+                    $ActiveIPs.Enqueue($IPaddr)
 
                 }
-            }
+            #}
         }
 
         function Get-Hostname {
@@ -122,12 +127,44 @@
             $FileHandle.WriteLine("$IP, $HostN")
 
         }
+
+        function Go-Fast {
+
+            $NumIPs = $IPQueue.Count
+            
+            for ([int]$NumIPs; $NumIPs -GT 0; $NumIPs--) {
+
+                $Temp = $IPQueue.Dequeue()
+                echo $Temp
+                $Container = {Ping-Node($Temp)}
+
+                $RunSpaceObj = [PSCustomObject] @{
+                    Runspace = [PowerShell]::Create()
+                    #Invoker = $Null
+                }
+
+                $RunSpaceObj.Runspace.RunSpacePool = $Pool
+                $RunSpaceObj.Runspace.AddScript($Container) | Out-Null
+                #$RunSpaceObj.Invoker = $RunSpaceObj.Runspace.BeginInvoke()
+                $Threads += @($RunSpaceObj)
+            }
+
+            foreach ($t in $Threads) {
+
+                $t.Runspace.Dispose()
+
+            }
+
+            $Pool.Close()
+            $Pool.Dispose()
+        }
     }   
      
      END {
 
         Populate-Queue
-        Ping-Node
+        Go-Fast
+        #Ping-Node("172.28.29.152")
         Get-Hostname
 
         if($OutCSV){
