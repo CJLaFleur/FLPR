@@ -14,6 +14,6 @@
 
     Add-Computer -Credential $Creds -DomainName $Domain
     
-    Restart-Computer
+    Restart-Computer -Force
 
 }

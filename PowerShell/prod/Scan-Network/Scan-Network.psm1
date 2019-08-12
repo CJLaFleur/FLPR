@@ -20,8 +20,8 @@
         [String]$EndIP,
 
         [Parameter(Mandatory = $False,
-        HelpMessage ="Set this if you want to include HostNames that could not be resolved.")]
-        [Switch]$Full,
+        HelpMessage ="Set this if you want to include hostnames that could not be resolved.")]
+        [Switch]$ShowOffline,
 
         [Parameter(Mandatory = $False,
         HelpMessage ="Set this if you wish to output the results of the scan to a text file.")]
@@ -105,7 +105,7 @@
                 
                     catch{
                     
-                        if($Full){
+                        if($ShowOffline){
                         
                             $ComputerInfo | Add-Member -Type NoteProperty -Name IPAddress -Value $IP -Force
                             $ComputerInfo | Add-Member -Type NoteProperty -Name HostName -Value 'HostName could not be resolved' -Force
