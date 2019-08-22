@@ -29,7 +29,7 @@ class Network:
 
     # Get active hosts
     def gethosts(self, ipaddr):
-        toping = Popen(['ping', '-c', '1', '-i', '1', ipaddr], stdout=PIPE)
+        toping = Popen(['ping', '-c', '1', '-i', '.2', ipaddr], stdout=PIPE)
         output = toping.communicate()[0]
         hostalive = toping.returncode
         if hostalive == 0:
