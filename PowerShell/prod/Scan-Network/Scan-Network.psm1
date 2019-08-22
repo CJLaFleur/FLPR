@@ -64,7 +64,6 @@
             }
         }
 
-
         function Get-Hostname {
 
         $NumHosts = $ActiveIPs.Count
@@ -125,13 +124,10 @@
            if($Test.Status -EQ 'Success'){
         
                 $ActiveIPs.Enqueue($IP)
-
-            
             
                 }
             
             } -Throttle 50 | Wait-RSJob -ShowProgress | Receive-RSJob | Remove-RSJob | Out-Null
-            
     }
 }   
      
