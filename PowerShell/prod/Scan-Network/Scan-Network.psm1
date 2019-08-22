@@ -32,7 +32,7 @@
     
     BEGIN {
 
-    $Ping = New-Object System.Net.Networkinformation.Ping
+    
     $ActiveIPs = New-Object System.Collections.Queue
     $IPQueue = New-Object System.Collections.Queue
     $HostList = New-Object System.Collections.Generic.List[System.Object]
@@ -110,13 +110,14 @@
 
         }
 
+        
         function Ping-Node {
 
-           1..$IPQueue.Count | ForEach {
+           1..$IPQueue.Count | Start-RSJob -VariablesToImport ActiveIPs, IPQueue -ScriptBlock {
            
            $IP = $IPQueue.Dequeue()
 
-           Start-RSJob -VariablesToImport IP, ActiveIPs, Ping -ScriptBlock {
+           $Ping = New-Object System.Net.Networkinformation.Ping
 
            $Test = $Ping.Send($IP, 1, .1)
 
@@ -124,11 +125,11 @@
         
                 $ActiveIPs.Enqueue($IP)
 
-            }
             
-                } -Throttle 50 | Wait-RSJob | Receive-RSJob | Remove-RSJob
             
-            }
+                }
+            
+            } -Throttle 50 | Wait-RSJob -ShowProgress | Receive-RSJob | Remove-RSJob | Out-Null
             
     }
 }   
