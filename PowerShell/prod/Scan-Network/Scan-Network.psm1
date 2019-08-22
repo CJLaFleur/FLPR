@@ -32,7 +32,6 @@
     
     BEGIN {
 
-    
     $ActiveIPs = New-Object System.Collections.Queue
     $IPQueue = New-Object System.Collections.Queue
     $HostList = New-Object System.Collections.Generic.List[System.Object]
@@ -82,6 +81,8 @@
                 $HostInfo | Add-Member -Type NoteProperty -Name IPAddress -Value $IP -Force
                 $HostInfo | Add-Member -Type NoteProperty -Name HostName -Value $HostN.HostName -Force
 
+                $HostList.Add($HostInfo)
+
                 }
 
             catch {
@@ -91,10 +92,10 @@
                 $HostInfo | Add-Member -Type NoteProperty -Name IPAddress -Value $IP -Force
                 $HostInfo | Add-Member -Type NoteProperty -Name HostName -Value 'Unknown' -Force
 
+                $HostList.Add($HostInfo)
+
                 }
             }
-
-            $HostList.Add($HostInfo)
 
             if ($OutCSV) {
 
@@ -148,7 +149,8 @@
         
         }
         
-        return $HostList | FT
+        echo ""
+        return $HostList | Format-Table | Out-String | ForEach-Object { $_.Trim() }
         
         }
     }
